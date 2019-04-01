@@ -1,0 +1,16 @@
+prjamoj = Прямой
+uakultura = UA:Культура
+eko-tv = Эко-ТВ
+rada = Рада
+uakrim = UA:Крим
+nadija = Надия
+sontse = Сонце
+112ukraina = 112 Украина
+7kanalodessa = 7 канал (Одесса)
+juzhnajavolna = Южная волна
+tretijtsifrovoj = Третий Цифровой
+reporter = Репортер
+uapershijsputnik = UA:Перший (спутник)
+dumskajatv = Думская TV
+uaodessa = UA:Одесса
+travelguide-tv = Travel Guide-TV
