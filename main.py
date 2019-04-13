@@ -13,9 +13,6 @@ from transliterate import translit
 import sys
 import threading
 import time
-#import pytz
-
-
 
 g = Grab()
 
@@ -55,7 +52,6 @@ def timezn(flag = False):
 
         c = str(l_tz)
         c = int(c[5])
-
 
         return c
 
@@ -191,6 +187,7 @@ def getTVProgramOnWeek(nameChannel):
             # Добавление временной зоны для старта и конца телепередачи
             time_start_format = time_start_format + timedelta(hours = tmzone)
 
+            # приведение к стандарту вывода
             time_start_format_out = time_start_format.strftime("%Y%m%d%H%M")
             time_start_format_forCompare = time_start_format.strftime("%Y%m%d")
 
@@ -200,22 +197,22 @@ def getTVProgramOnWeek(nameChannel):
             time_end_format = time_end_format + timedelta(hours = tmzone)
 
             time_end_format_out = time_end_format.strftime("%Y%m%d%H%M")
+            
+            dayOfWeek = datetime.strptime(str(time_start_format_out),"%Y%m%d%H%M").strftime("%A")
 
-            dayOfWeek = datetime.strptime(time_start[:14],"%Y%m%d%H%M%S").strftime("%A")
+            
 
             title_curProg = prog.find('title').text
             title_curProg = title_curProg.replace("\"", '')
 
-            currentProg_start = time_start_format
-            currentProg_end = time_end_format
-            currentProg_progress = getProgressTime(time_start, time_end)
+            currentProg_progress = getProgressTime(time_start_format_out+'00', time_end_format_out+'00')
             
             # День недели 0 - 6
             numDayOfWeek_now = timeNow.weekday()
             
             #Число понедельника текущей недели
-            this_monday = timeNow + timedelta(days=int(-numDayOfWeek_now), hours=int(-time_now.hour))
-            
+            this_monday = timeNow + timedelta(days=int(-numDayOfWeek_now), hours=int(-time_now.hour), minutes=-time_now.minute)
+  
             #Число воскресенья текущей недели
             this_sunday = this_monday + timedelta(days=6)
 
@@ -225,13 +222,20 @@ def getTVProgramOnWeek(nameChannel):
 
 
             #Находит программу в промкжутке текущей недели
+            # TO DO
+            # + Баг!! на канале wave выводит {"понедельник":], а после идет воскресенье
+            # + Не правильно выводит текушую передачу
+            # + Не правильно показывает день недели + нет загаловка в виде дня недели
+            # ++ Исправлено 13:04:2019
+
+            # Если тукушая дата понедельником м воскресеньем
             if this_monday_format <= time_start_format_forCompare <= this_sunday_format:
-                
+
                 if setDayOfWeek != translatechannels(dayOfWeek):
 
                     setDayOfWeek = translatechannels(dayOfWeek)
 
-                    out_str = out_str[:-1] + '],\"'+ translatechannels(dayOfWeek) +'\":['
+                    out_str = out_str[:-1] + '],\"'+ setDayOfWeek +'\":['
 
                 title_curProg = prog.find('title').text
                 title_curProg = title_curProg.replace("\"", '')
@@ -242,7 +246,8 @@ def getTVProgramOnWeek(nameChannel):
                 out_str += ('{"%s":"%s","%s":"%s","%s":"%s","%s":"%s","%s":"%s","%s":%s},' % (
                     'nameChannel',dict_ID_channels[out],'nameShow',title_curProg,
                     'startTime',time_start_format_out, 'endTime',time_end_format_out,
-                    'dayOfWeek',translatechannels(dayOfWeek),
+                    # 'dayOfWeek',translatechannels(dayOfWeek),
+                    'dayOfWeek',setDayOfWeek,
                     'progress',currentProg_progress  ))
 
     return out_str[:-1] + ']}'
@@ -297,13 +302,13 @@ def currentTVProgramAllChannels():
 
         if time_start_format < time_now and time_now < time_end_format:
 
-            nameChannel_find = channels_list[out]
             currentProg_progress = getProgressTime(time_start, time_end)
 
             title_prog = prog.find('title').text
             title_prog = title_prog.replace("\"", '')
                 
-            dayOfWeek = datetime.strptime(time_start[:14],"%Y%m%d%H%M%S").strftime("%A")
+            # !!
+            dayOfWeek = datetime.strptime(time_start_format_out,"%Y%m%d%H%M%S").strftime("%A")
 
             out_str += '{"%s":"%s","%s":"%s","%s":"%s","%s":"%s","%s":"%s","%s":%s},' % (
                 'nameChannel',dict_ID_channels[out],'nameShow',title_prog,
