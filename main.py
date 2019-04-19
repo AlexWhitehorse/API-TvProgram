@@ -577,11 +577,30 @@ if __name__ == '__main__':
 
     try:
 
+        print('Server started %s:%s' % (HOST_NAME, PORT_NUMBER))
+
         httpd.serve_forever()
+
 
     except KeyboardInterrupt:
 
+        print('Server stopped %s:%s' % (HOST_NAME, PORT_NUMBER))
+
         pass
+
+
+
+    # При любой ошибке на сервере, он перезагружается
+    except:
+
+        print('Server Error %s:%s' % (HOST_NAME, PORT_NUMBER))
+
+        writerLOG(logging_srv, path_to_log_lile, name_server_log, 'Server down! Trying restart - %s:%s  ' % (HOST_NAME, PORT_NUMBER))
+
+        httpd.server_close()
+
+        httpd.serve_forever()
+
         
     httpd.server_close()    
 
