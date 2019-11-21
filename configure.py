@@ -1,7 +1,7 @@
 #python 3.6.7
 
 # IP сервера
-HOST_NAME = 'localhost'
+HOST_NAME = '141.105.134.202'
 
 
 # PORT
@@ -43,7 +43,7 @@ logging_srv_cl_f = False
 
 
 #Ручная коректировка UTC
-flag_UTC = False # False(авто-коректировка) или числовое значение
+flag_UTC = int(3) # False(авто-коректировка) или числовое значение
 
 
 

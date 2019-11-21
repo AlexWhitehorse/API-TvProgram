@@ -51,6 +51,7 @@ def timezn(flag = False):
         l_tz = timezone(b - a)
 
         c = str(l_tz)
+        #print(c)
         c = int(c[5])
 
         return c
@@ -63,12 +64,14 @@ tmzone = timezn(flag_UTC)
 # The function to get content from vsetv and save this in to file
 def get_content():
 
-    response = g.go(url)
+    try:
+        response = g.go(url)
+        out = response.unicode_body()
 
-    out = response.unicode_body()
-
-    open('TvProgram.xml', 'w', encoding= encod).write(response.unicode_body())
-
+        open('TvProgram.xml', 'w', encoding= encod).write(response.unicode_body())
+    except:
+        time.sleep(3)
+        get_content()
 
 def getProgressTime(time_start, time_end): # Strings t_s t_e
 
@@ -542,7 +545,7 @@ class MyHandler(BaseHTTPRequestHandler):
         
         else:
             
-            self.respond({'status': 23})
+            self.respond({'status': 200})
 
             self.wfile.write(bytes("Error! - invalid url", "utf-8"))
         

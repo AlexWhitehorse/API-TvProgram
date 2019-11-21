@@ -38,6 +38,8 @@ python 3
             
             - в случае возникновения ошибки:
 
+		http://verbunix.blogspot.com/2013/09/ubuntu-python3-grab-install.html
+
                 https://grablab.org/docs/usage/installation.html
 
         2. pip3 install datetime
